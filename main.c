@@ -25,36 +25,42 @@ typedef struct flight_tag{
 }flight;
 
 typedef struct window_tag{
-  char window_name[10];
   char window_id[4];
   struct flight *fptr;
   struct window_tag *next;
   struct window_tag *prev;
 }window;
 
-window* windowIAS(window **lpptr,)
-{
-	window *lptr,*ptr,*nptr;
-	ptr=*lpptr;
-	nptr=(window*)malloc(sizeof(window));
-	nptr->data=d;
-	nptr->next=ptr;
-	lptr=nptr;
-	return lptr;
-}
 
 flight* initialiseFlight(){
   flight *fptr;
   fptr = (flight*)malloc(sizeof(flight));
   fptr -> flight_id[0] = '\0';
   for (int i = 0; i < 60; i++) {
-    /* code */
     fptr -> seats[i] = 0;
   }
   fptr -> noOfAllocSeats = 0;
-  pptr = NULL;
+  fptr -> pptr = NULL;
   fptr -> next = NULL;
   return fptr;
+}
+window* windowIAS(window **wpptr,char f_arr[][], int r, int c)
+{
+  window *temp,*ptr,*wptr;
+  ptr = *wpptr;
+  wptr = (window*)malloc(sizeof(window));
+  wptr -> fptr = NULL;
+  for (int i = 0; i < r; i++) {
+    nptr = initialiseFlight();
+    nptr -> next = wptr -> fptr;
+    strcpy(nptr -> flight_id,f_arr[i]);
+    wptr -> fptr = nptr;
+  }
+  ptr 
+  nptr->data=d;
+  nptr->next=ptr;
+  lptr=nptr;
+  return lptr;
 }
 node_type* iaS(node_type **lpptr,int d)
 {

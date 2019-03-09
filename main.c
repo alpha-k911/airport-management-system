@@ -186,7 +186,7 @@ void allocateBoardingPass(window **wpptr,char flight_id[], char ticket_id[]){
                     }
                 }
             }
-            // printf("seat alloted: %d", s);
+            printf("seat alloted: %d", s);
             pptr -> next = pre_ptr;
             if (p != 1) {
                 for (int q = 1; q < p; q++) {

@@ -14,7 +14,8 @@ typedef struct passenger_tag{
   int noOfpassAssociated;
   struct passenger_tag *next;
 }passenger;
-
+//d;kfks
+dknk;
 typedef struct flight_tag{
   char flight_id[3];
   char seats[60];

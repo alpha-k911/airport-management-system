@@ -64,7 +64,7 @@ flight* initialiseFlight(){
     fptr -> next = NULL;
     return fptr;
 }
-void addFlightServiceWindow(window **wpptr,char f_arr[][6], int r, int c)
+void addFlightServiceWindow(window **wpptr,char f_arr[][6], int r)
 {
     window *temp,*ptr,*wptr;
     flight *nptr;
@@ -211,7 +211,11 @@ void visitSeat(int i){
 }
 void visitPassenger(passenger *pptr){
     char flight[6];
-    strcpy(flight, pptr -> ticket_id);
+    for (int i = 0; i < 5; i++) {
+        /* code */
+        flight[i] = pptr -> ticket_id[i];
+    }
+    // strcpy(flight, pptr -> ticket_id);
     flight[5] = '\0';
     printf("Flight:%s", flight);
     printf("Name:%s, ", pptr -> pass_name);
@@ -346,16 +350,16 @@ void DisplayAvailableSeats(window *wptr, char f[]){
   fl = wptr -> fptr;
   for (int i = 0; i < 60; i++) {
     if( fl -> seats[i] == 0 ){
-      printf("Seat No. %d", i);
+      printf("Seat No. %d, ", i+1);
       visitSeat(i);
     }
   }
 }
 
 int main(int argc, char const *argv[]) {
-    int inp;
+    int inp,choice,l=1,r,check;
     window *win = NULL;
-    char f[3][6],t[9];
+    char f[10][6],t[9],fli[6],tfli[6],tic[9];
     flight *fl;
     // for (int i = 0; i < 3; i++) {
     //   /* code */
@@ -366,23 +370,79 @@ int main(int argc, char const *argv[]) {
     strcpy(f[2],"IND12\0");
     strcpy(t,"IND12001\0");
     printf("%s\n",t);
-    addFlightServiceWindow(&win,f,3,5);
-    allocateBoardingPass(&win,f[2],t);
+    addFlightServiceWindow(&win,f,3);
     strcpy(f[0],"JET10\0");
     strcpy(f[1],"JET11\0");
     strcpy(f[2],"JET12\0");
     strcpy(t,"JET12001\0");
-    addFlightServiceWindow(&win,f,3,5);
-    printf("%s  %s\n",f[2],t );
-    allocateBoardingPass(&win,f[2],t);
-    t[5] = '2';
-    allocateBoardingPass(&win,f[2],t);
-    // printf("%d\n", fl -> noOfAllocSeats);
-    DisplayFlightData(win,f[2]);
-    DisplayPassengerDetails(win,t);
-    // DisplayAvailableSeats(win,f[2]);
-    // switch (inp) {
-    //   case /* value */
-    // }
+    addFlightServiceWindow(&win,f,3);
+
+    while (l) {
+        printf("============================================\n");
+        printf("1.addFlightServiceWindow(Flight_IDs)\n2.allocateBoardingPass(Flight__D, Ticket_ID)\n3.DisplayFlightData()\n4.DisplayPassengerDetails(Ticket_ID)\n5.DisplayAvailableSeats(Flight_ID)\n");
+        printf("============================================\n");
+        printf("6.ExIt\n");
+        printf("============================================\n");
+        printf("Enter your choice: \n");
+        scanf("%d",&choice );
+        printf("============================================\n");
+        switch (choice) {
+            case 1 : printf("Enter no of flights: ");
+                    scanf("%d", &r);
+                    for (int i = 0; i < r; i++) {
+                        printf("Enter the Flight ID (e.g. IND01):  ");
+                      scanf("%s", f[i]);
+                    }
+                    addFlightServiceWindow(&win,f,r);
+                    break;
+            case 2 : printf("Enter the Flight ID and Ticket ID (e.g. IND01 IND01056): ");
+                    scanf("%s", &fli);
+                    scanf("%s", &tic);
+                    for (int i = 0; i < 5; i++) {
+                        tfli[i] = tic[i];
+                    }
+                    tfli[5] = '\0';
+                    check = strcmp(tfli,fli);
+                    if (check == 0 && strlen(fli) == 5 && strlen(tic) == 8) {
+                        allocateBoardingPass(&win,fli,tic);
+                    }
+                    else{
+                        printf("Enter proper Flight ID and Ticket ID....\n");
+                    }
+                    break;
+            case 3 : printf("Enter the Flight ID for Details (e.g. IND01): ");
+                    scanf("%s", &fli);
+                    if (strlen(fli) == 5) {
+                        DisplayFlightData(win,fli);
+                    }
+                    else{
+                        printf("Enter proper Flight ID....\n");
+                    }
+                    break;
+
+            case 4 : printf("Enter the Ticket ID for Details (e.g. IND01078): ");
+                    scanf("%s", &tic);
+                    if (strlen(tic) == 8) {
+                        DisplayPassengerDetails(win,tic);
+                    }
+                    else{
+                        printf("Enter proper Ticket ID....\n");
+                    }
+                    break;
+            case 5 : printf("Enter the Flight ID for Details (e.g. IND01): ");
+                    scanf("%s", &fli);
+                    if (strlen(fli) == 5) {
+                        DisplayAvailableSeats(win,fli);
+                    }
+                    else{
+                        printf("Enter proper Flight ID....\n");
+                    }
+                    break;
+            case 6 : l = 0;
+                    break;
+            default : printf("Enter a proper Choice....\n");
+                    break;
+        }
+    }
     return 0;
 }

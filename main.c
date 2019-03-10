@@ -1,19 +1,13 @@
 #include <stdio.h>
 #include <string.h>
-// typedef struct ticket_tag{
-//   char ticket_id[10];
-//   int noOfPassengers;
-// }ticket;
-
+#include <stdlib.h>
 typedef struct passenger_tag{
     char pass_name[20];
-    // struct ticket tic;
     char ticket_id[9];
     int age;
     int luggage_weight;
     int fine;
     int seat_no;
-    // int noOfpassAssociated;
     struct passenger_tag *next;
 }passenger;
 
@@ -41,13 +35,11 @@ passenger* initialisePassenger(){
     fptr -> luggage_weight = 0;
     fptr -> fine = 0;
     fptr -> seat_no = 0;
-    // fptr -> noOfpassAssociated = 0;
     fptr -> next = NULL;
     return fptr;
 }
 passenger* getPassengerDetails(){
     passenger *fptr;
-    // char name[20];
     fptr = initialisePassenger();
     printf("Enter Name of Passenger: ");
     scanf("%s", fptr -> pass_name);
@@ -56,7 +48,6 @@ passenger* getPassengerDetails(){
     printf("Enter the weight of luggage: ");
     scanf("%d", &fptr -> luggage_weight);
     if (fptr -> luggage_weight > 15) {
-        /* code */
         fptr -> fine = 100 * ( (fptr -> luggage_weight) - 15 );
     }
     return fptr;
@@ -91,7 +82,6 @@ void addFlightServiceWindow(window **wpptr,char f_arr[][6], int r, int c)
         wptr -> fptr = nptr;
     }
     wptr -> next = ptr;
-
     if (ptr) {
         ptr -> prev = wptr;
     }
@@ -99,7 +89,6 @@ void addFlightServiceWindow(window **wpptr,char f_arr[][6], int r, int c)
         wptr -> prev = NULL;
     }
     *wpptr = wptr;
-    // return wptr;
 }
 void allocateBoardingPass(window **wpptr,char flight_id[], char ticket_id[]){
     char w_id[4], f_id[6];
@@ -187,7 +176,6 @@ void allocateBoardingPass(window **wpptr,char flight_id[], char ticket_id[]){
                     }
                 }
             }
-            // printf("seat alloted: %d", s);
             pptr -> next = pre_ptr;
             if (p != 1) {
                 for (int q = 1; q < p; q++) {
@@ -195,17 +183,13 @@ void allocateBoardingPass(window **wpptr,char flight_id[], char ticket_id[]){
                     strcpy(temp -> ticket_id , ticket_id);
                     f = wptr -> fptr;
                     while ((f -> seats[s]) != 0) {
-                        /* code */
                         s++;
                     }
-                    // if ((f -> seats[s]) == 0) {
                     f -> noOfAllocSeats = f -> noOfAllocSeats + 1;
                     f -> seats[s] = 1;
                     temp -> seat_no = s + 1;
                     temp -> next = pptr;
                     pptr = temp;
-                    // s++;
-                    // }
                 }
             }
             f = wptr -> fptr;
@@ -226,6 +210,10 @@ void visitSeat(int i){
     }
 }
 void visitPassenger(passenger *pptr){
+    char flight[6];
+    strcpy(flight, pptr -> ticket_id);
+    flight[5] = '\0';
+    printf("Flight:%s", flight);
     printf("Name:%s, ", pptr -> pass_name);
     printf("Age:%d, ", pptr -> age);
     printf("Luggage:%d, ", pptr -> luggage_weight);
@@ -238,8 +226,6 @@ void DisplayFlightData(window *wptr, char f[]){
     flight *fl;
     passenger *pptr, *temp, *pre_ptr;
     int flag = 0, w, wf,s,i,p;
-    // window *wptr;
-    // wptr = *wpptr;
     f_id[0] = w_id[0] = f[0];
     f_id[1] = w_id[1] = f[1];
     f_id[2] = w_id[2] = f[2];
@@ -266,28 +252,33 @@ void DisplayFlightData(window *wptr, char f[]){
             wptr = wptr -> next;
         }
     }
-    fl = wptr -> fptr;
-    pptr = fl -> pptr;
-    while (pptr) {
-        visitPassenger(pptr);
-        pptr = pptr -> next;
+    if (flag == 1) {
+      /* code */
+        fl = wptr -> fptr;
+        pptr = fl -> pptr;
+        printf("Flight Data for Flight: %s\n", f);
+        while (pptr) {
+            visitPassenger(pptr);
+            pptr = pptr -> next;
+        }
+    }
+    else{
+        printf("We can't find any Flight on provided Flight ID.....\n");
     }
 }
 void DisplayPassengerDetails(window *wptr,char t[]){
-  char w_id[4], f_id[6];
-  flight *fl;
-  passenger *pptr, *temp, *pre_ptr;
-  int flag = 0, w, wf,s,i,p;
-  // window *wptr;
-  // wptr = *wpptr;
-  f_id[0] = w_id[0] = t[0];
-  f_id[1] = w_id[1] = t[1];
-  f_id[2] = w_id[2] = t[2];
-  f_id[3] = t[3];
-  f_id[4] = t[4];
-  f_id[5] = '\0';
-  w_id[3]='\0';
-  while (wptr && flag == 0) {
+    char w_id[4], f_id[6];
+    flight *fl;
+    passenger *pptr, *temp, *pre_ptr;
+    int flag = 0, w, wf,s,i,p;
+    f_id[0] = w_id[0] = t[0];
+    f_id[1] = w_id[1] = t[1];
+    f_id[2] = w_id[2] = t[2];
+    f_id[3] = t[3];
+    f_id[4] = t[4];
+    f_id[5] = '\0';
+    w_id[3]='\0';
+    while (wptr && flag == 0) {
       w = strcmp(w_id, wptr -> window_id);
       if (w == 0) {
           while (wptr -> fptr && flag == 0) {
@@ -305,23 +296,27 @@ void DisplayPassengerDetails(window *wptr,char t[]){
       if (flag == 0) {
           wptr = wptr -> next;
       }
-  }
-  fl = wptr -> fptr;
-  pptr = fl -> pptr;
-  while (pptr) {
-    if (strcmp(pptr -> ticket_id,t) == 0) {
-      visitPassenger(pptr);
     }
-      pptr = pptr -> next;
-  }
+    if (flag == 1) {
+        fl = wptr -> fptr;
+        pptr = fl -> pptr;
+        printf("Passenger details for Ticket ID: %s\n", t);
+        while (pptr) {
+            if (strcmp(pptr -> ticket_id,t) == 0) {
+                visitPassenger(pptr);
+            }
+            pptr = pptr -> next;
+        }
+    }
+    else{
+        printf("We can't find any details on provided Ticket ID.....\n");
+    }
 }
 void DisplayAvailableSeats(window *wptr, char f[]){
   char w_id[4], f_id[6];
   flight *fl;
   passenger *pptr, *temp, *pre_ptr;
   int flag = 0, w, wf,s,i,p;
-  // window *wptr;
-  // wptr = *wpptr;
   f_id[0] = w_id[0] = f[0];
   f_id[1] = w_id[1] = f[1];
   f_id[2] = w_id[2] = f[2];
@@ -358,90 +353,36 @@ void DisplayAvailableSeats(window *wptr, char f[]){
 }
 
 int main(int argc, char const *argv[]) {
-    /* code */
+    int inp;
     window *win = NULL;
     char f[3][6],t[9];
     flight *fl;
-
     // for (int i = 0; i < 3; i++) {
     //   /* code */
     //   scanf("%s", f[i]);
     // }
-    f[0][0]='I';
-    f[0][1]='N';
-    f[0][2]='N';
-    f[0][3]='1';
-    f[0][4]='0';
-    f[0][5]='\0';
-    f[1][0]='I';
-    f[1][1]='N';
-    f[1][2]='N';
-    f[1][3]='1';
-    f[1][4]='1';
-    f[1][5]='\0';
-    f[2][0]='I';
-    f[2][1]='N';
-    f[2][2]='N';
-    f[2][3]='1';
-    f[2][4]='2';
-    f[2][5]='\0';
-
-
-    t[0]='I';
-    t[1]='N';
-    t[2]='N';
-    t[3]='1';
-    t[4]='2';
-    t[5]='0';
-    t[6]='0';
-    t[7]='1';
-    t[8]='\0';
-
-    // t[3]='1';
-    // t[4]='1';
-    // t[5]='\0';
-    // t[0]='I';
-    // t[1]='N';
-    // t[2]='N';
-    // t[3]='1';
-    // t[4]='2';
-    // t[5]='\0';
-
-    // strcpy("IND01",f[0]);
-    // strcpy("IND02",f[1]);
-    // strcpy("IND03",f[2]);
-    printf("%s\n",f[0]);
-
+    strcpy(f[0],"IND10\0");
+    strcpy(f[1],"IND11\0");
+    strcpy(f[2],"IND12\0");
+    strcpy(t,"IND12001\0");
+    printf("%s\n",t);
     addFlightServiceWindow(&win,f,3,5);
     allocateBoardingPass(&win,f[2],t);
-    f[0][0]='A';
-    f[0][1]='N';
-    f[0][2]='N';
-    f[0][3]='1';
-    f[0][4]='0';
-    f[0][5]='\0';
-    f[1][0]='A';
-    f[1][1]='N';
-    f[1][2]='N';
-    f[1][3]='1';
-    f[1][4]='1';
-    f[1][5]='\0';
-    f[2][0]='A';
-    f[2][1]='N';
-    f[2][2]='N';
-    f[2][3]='1';
-    f[2][4]='2';
-    f[2][5]='\0';
-    t[0]='A';
+    strcpy(f[0],"JET10\0");
+    strcpy(f[1],"JET11\0");
+    strcpy(f[2],"JET12\0");
+    strcpy(t,"JET12001\0");
     addFlightServiceWindow(&win,f,3,5);
     printf("%s  %s\n",f[2],t );
     allocateBoardingPass(&win,f[2],t);
-    fl = win -> fptr;
-    t[0]='I';
-    f[2][0]='I';
+    t[5] = '2';
+    allocateBoardingPass(&win,f[2],t);
     // printf("%d\n", fl -> noOfAllocSeats);
-    // DisplayFlightData(win,f[2]);
-    // DisplayPassengerDetails(win,t);
-    DisplayAvailableSeats(win,f[2]);
+    DisplayFlightData(win,f[2]);
+    DisplayPassengerDetails(win,t);
+    // DisplayAvailableSeats(win,f[2]);
+    // switch (inp) {
+    //   case /* value */
+    // }
     return 0;
 }

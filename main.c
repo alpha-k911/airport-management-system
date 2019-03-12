@@ -244,7 +244,7 @@ void allocateBoardingPass(window **wpptr,char flight_id[], char ticket_id[]){
             f -> pptr = pptr;
         }
         else{
-            printf("Sorry for inconvenience caused, no seats are left \n");
+            printf("Sorry for inconvenience caused, no seats are left according to your requirement \n");
         }
     }
 }
@@ -398,17 +398,12 @@ void DisplayAvailableSeats(window *wptr, char f[]){
           wptr = wptr -> next;
       }
   }
-  if (flag == 1) {
-      fl = wptr -> fptr;
-      for (int i = 0; i < 60; i++) {
-        if( fl -> seats[i] == 0 ){
-          printf("Seat No. %d, ", i+1);
-          visitSeat(i);
-        }
-      }
-  }
-  else{
-      printf("We can't find a Flight on provided Flight ID.... Please try again....\n");
+  fl = wptr -> fptr;
+  for (int i = 0; i < 60; i++) {
+    if( fl -> seats[i] == 0 ){
+      printf("Seat No. %d, ", i+1);
+      visitSeat(i);
+    }
   }
 }
 
@@ -439,7 +434,7 @@ int main(int argc, char const *argv[]) {
         printf("============================================\n");
         printf("6.ExIt\n");
         printf("============================================\n");
-        printf("Enter your choice: \n");
+        printf("Enter your choice>>> ");
         scanf("%d",&choice );
         printf("============================================\n");
         switch (choice) {
@@ -451,7 +446,7 @@ int main(int argc, char const *argv[]) {
                     }
                     addFlightServiceWindow(&win,f,r);
                     break;
-            case 2 : printf("Enter the Flight ID and Ticket ID (e.g. IND11 IND01056): ");
+            case 2 : printf("Enter the Flight ID and Ticket ID (e.g. IND11 IND11056): ");
                     scanf("%s", &fli);
                     scanf("%s", &tic);
                     for (int i = 0; i < 5; i++) {

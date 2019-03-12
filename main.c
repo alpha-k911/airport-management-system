@@ -75,7 +75,7 @@ void addFlightServiceWindow(window **wpptr,char f_arr[][6], int r)
     wptr -> window_id[2] = f_arr[0][2];
     wptr -> fptr = NULL;
     for (int i = 0; i < r; i++) {
-        printf("1\n");
+        // printf("1\n");
         nptr = initialiseFlight();
         nptr -> next = wptr -> fptr;
         strcpy(nptr -> flight_id,f_arr[i]);
@@ -89,6 +89,7 @@ void addFlightServiceWindow(window **wpptr,char f_arr[][6], int r)
         wptr -> prev = NULL;
     }
     *wpptr = wptr;
+    // printf("SUCCESS\n");
 }
 void allocateBoardingPass(window **wpptr,char flight_id[], char ticket_id[]){
     char w_id[4], f_id[6];
@@ -134,7 +135,9 @@ void allocateBoardingPass(window **wpptr,char flight_id[], char ticket_id[]){
         if (p > 4 || p < 1) {
             printf("Enter proper no. of passengers (0<p<5)\n");
         }
-        else{
+
+        else if ((60 - (f -> noOfAllocSeats)) >= p)
+        {
             pptr = getPassengerDetails();
             strcpy(pptr -> ticket_id , ticket_id);
             if ((pptr -> age) > 60) {
@@ -147,6 +150,21 @@ void allocateBoardingPass(window **wpptr,char flight_id[], char ticket_id[]){
                         s = i;
                         f -> noOfAllocSeats = f -> noOfAllocSeats + 1;
                         pptr -> seat_no = i + 1;
+                    }
+                }
+                if (flag == 0) {
+                    for (int i = 0; i < 60 && flag == 0; i++) {
+                        f = wptr -> fptr;
+                        if ((f -> seats[i]) == 0) {
+                            f -> seats[i] = 1;
+                            flag = 1;
+                            s = i;
+                            f -> noOfAllocSeats = f -> noOfAllocSeats + 1;
+                            pptr -> seat_no = i + 1;
+                        }
+                    }
+                    if (flag == 0) {
+                        printf("Sorry no seats left to allocate\n");
                     }
                 }
             }
@@ -162,6 +180,21 @@ void allocateBoardingPass(window **wpptr,char flight_id[], char ticket_id[]){
                         pptr -> seat_no = i + 1;
                     }
                 }
+                if (flag == 0) {
+                    for (int i = 0; i < 60 && flag == 0; i++) {
+                        f = wptr -> fptr;
+                        if ((f -> seats[i]) == 0) {
+                            f -> seats[i] = 1;
+                            flag = 1;
+                            s = i;
+                            f -> noOfAllocSeats = f -> noOfAllocSeats + 1;
+                            pptr -> seat_no = i + 1;
+                        }
+                    }
+                    if (flag == 0) {
+                        printf("Sorry no seats left to allocate\n");
+                    }
+                }
             }
             else{
                 flag = 0;
@@ -173,6 +206,21 @@ void allocateBoardingPass(window **wpptr,char flight_id[], char ticket_id[]){
                         s = i;
                         f -> noOfAllocSeats = f -> noOfAllocSeats + 1;
                         pptr -> seat_no = i + 1;
+                    }
+                }
+                if (flag == 0) {
+                    for (int i = 0; i < 60 && flag == 0; i++) {
+                        f = wptr -> fptr;
+                        if ((f -> seats[i]) == 0) {
+                            f -> seats[i] = 1;
+                            flag = 1;
+                            s = i;
+                            f -> noOfAllocSeats = f -> noOfAllocSeats + 1;
+                            pptr -> seat_no = i + 1;
+                        }
+                    }
+                    if (flag == 0) {
+                        printf("Sorry no seats left to allocate\n");
                     }
                 }
             }
@@ -194,6 +242,9 @@ void allocateBoardingPass(window **wpptr,char flight_id[], char ticket_id[]){
             }
             f = wptr -> fptr;
             f -> pptr = pptr;
+        }
+        else{
+            printf("Sorry for inconvenience caused, no seats are left \n");
         }
     }
 }
@@ -369,14 +420,14 @@ int main(int argc, char const *argv[]) {
     strcpy(f[1],"IND11\0");
     strcpy(f[2],"IND12\0");
     strcpy(t,"IND12001\0");
-    printf("%s\n",t);
+    // printf("%s\n",t);
     addFlightServiceWindow(&win,f,3);
     strcpy(f[0],"JET10\0");
     strcpy(f[1],"JET11\0");
     strcpy(f[2],"JET12\0");
     strcpy(t,"JET12001\0");
     addFlightServiceWindow(&win,f,3);
-
+        printf("==========AIRPORT MANAGEMENT SYSTEM=========\n");
     while (l) {
         printf("============================================\n");
         printf("1.addFlightServiceWindow(Flight_IDs)\n2.allocateBoardingPass(Flight__D, Ticket_ID)\n3.DisplayFlightData()\n4.DisplayPassengerDetails(Ticket_ID)\n5.DisplayAvailableSeats(Flight_ID)\n");
